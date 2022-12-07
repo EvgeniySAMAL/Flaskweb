@@ -1,16 +1,16 @@
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
 @app.route("/")
 @app.route("/home")
-def hello_world():
-    return "<p>Hello, World!</p>"
+def index():
+    return render_template("blog/index.html")
 
 
 @app.route("/about")
 def about():
-    return " World!"
+    return render_template("blog/about.html")
 
 
 @app.route("/stadies")
@@ -19,7 +19,7 @@ def stadies():
 
 @app.route('/user/<string:name>/<int:id>')
 def user(name, id):
-    return "user page" + name + "-" + id
+    return "user page: " + name + "-" + str(id)
 
 
 if __name__=='__main__':
