@@ -1,4 +1,4 @@
-from flask import Flask, render_template, current_app, request
+from flask import Flask, render_template, current_app, request,redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -33,12 +33,32 @@ def about():
 
 @app.route("/stadies")
 def stadies():
-    return " give me the first offer"
+    return render_template("stadies.html")
+
+@app.route("/posts")
+def posts():
+    articles = Article.query.order_by(Article.data).all()
+    return render_template("posts.html", articles=articles)
 
 
-@app.route('/user/<string:name>/<int:id>')
-def user(name, id):
-    return "user page: " + name + "-" + str(id)
+@app.route("/create_article", methods=['POST','GET'])
+def create_article():
+    if request.method=="POST":
+        title =request.form['title']
+        intro = request.form['intro']
+        text = request.form['text']
+
+        article = Article(title=title, intro=intro, text=text)
+
+        try:
+            db.session.add(article)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "При добавлении статьи произошла ошибка"
+    else:
+        return render_template("create_article.html")
+
 
 
 if __name__ == '__main__':
